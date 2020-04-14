@@ -14,7 +14,7 @@ struct ContentView: View {
     
     init() {
         self.dataVM = DataViewModel()
-        self.dataVM.fetchData()
+        self.dataVM.fetchDropBoxData()//.fetchData()
     }
     
     var body: some View {

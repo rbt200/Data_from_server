@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class DataService {
     func getData(completion: @escaping (Data?) -> ()) {
@@ -24,13 +25,43 @@ class DataService {
                 return
             }
             
-            let weatherResponse = try? JSONDecoder().decode(ServerResponse.self, from: data)
-            if let weatherResponse = weatherResponse {
-                let weather = weatherResponse.main
-                completion(weather)
+            let dataResponse = try? JSONDecoder().decode(ServerResponse.self, from: data)
+            if let dataResponse = dataResponse {
+                let data = dataResponse.main
+                completion(data)
             } else {
                 completion(nil)
             }
         }.resume()
+    }
+}
+
+class DataDropBox {
+    
+    func getJsonFromUrl() {
+        //let url = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/facts.json"
+        let url = "https://my-json-server.typicode.com/rbt200/fake_data_database/db"
+        //https://github.com/rbt200/fake_data_database/blob/master/db.json
+        
+        URLSession.shared.dataTask(with:  URL(string: url)!) { (data, res, err) in
+            if let d = data {
+                if let value = String(data: d, encoding: String.Encoding.ascii) {
+                    if let jsonData = value.data(using: String.Encoding.utf8) {
+                        do {
+                            let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+                            if let arr = json["comments"] as? [[String: Any]] {
+                                debugPrint(arr)
+                                debugPrint(arr[1])
+                                debugPrint(arr[2])
+                                //debugPrint(arr[3])
+                            }
+                        } catch {
+                            NSLog("ERROR \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+    .resume()
     }
 }

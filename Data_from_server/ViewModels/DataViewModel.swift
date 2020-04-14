@@ -4,11 +4,14 @@ import Combine
 class DataViewModel: ObservableObject {
     
     private var dataService: DataService!
+    private var dropBoxService: DataDropBox!
     
     @Published var data = Data()
+    @Published var dropBox = DataDropBox()
     
     init() {
         self.dataService = DataService()
+        self.dropBoxService = DataDropBox()
     }
     
     var title: String {
@@ -19,7 +22,7 @@ class DataViewModel: ObservableObject {
         }
     }
     
-     func fetchData() {
+    func fetchData() {
         self.dataService.getData(){ data in
             if let data = data {
                 DispatchQueue.main.async {
@@ -27,5 +30,9 @@ class DataViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func fetchDropBoxData() {
+        self.dropBoxService.getJsonFromUrl()
     }
 }
